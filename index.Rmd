@@ -1,5 +1,5 @@
 ---
-title: "Data Carpentry: R for data analysis and visualization of Ecological Data"
+title: "Data Carpentry: R for data analysis and visualization of Natural History Collection Data"
 author: François Michonneau & Auriel Fournier (Lesson Maintainers)
 ---
 
