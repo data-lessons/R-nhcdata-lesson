@@ -21,37 +21,58 @@ source("setup.R")
 
 ------------
 
-## Presentation of the Survey Data
+## Presentation of the Carabidae beetle data
 
 ```{r, echo=FALSE, purl=TRUE}
-### Presentation of the survey data
+### Presentation of the Carabidae beetle data
 ```
 
-We are studying the species and weight of animals caught in plots in our study
-area. The dataset is stored as a comma separated value (CSV) file.
-Each row holds information for a single animal, and the columns represent:
+We are working with data about individual beetle specimens in natural history
+collections from California. The Carabidae family consists of ground-dwelling
+beetles and is one of the larger familes of animals with more than 2,000 species
+in North America alone.
 
-| Column           | Description                        |
-|------------------|------------------------------------|
-| record\_id       | Unique id for the observation      |
-| month            | month of observation               |
-| day              | day of observation                 |
-| year             | year of observation                |
-| plot\_id         | ID of a particular plot            |
-| species\_id      | 2-letter code                      |
-| sex              | sex of animal ("M", "F")           |
-| hindfoot\_length | length of the hindfoot in mm       |
-| weight           | weight of the animal in grams      |
-| genus            | genus of animal                    |
-| species          | species of animal                  |
-| taxa             | e.g. Rodent, Reptile, Bird, Rabbit |
-| plot\_type       | type of plot                       |
+The data set was retrieved from the [iDigBio data portal](https://portal.idigbio.org/)
+and the file used for teaching here has been simplified by removing many columns
+of detailed information. These specimens are from many different collections at 
+institutions like the University of Alberta, Ohio State University, and the 
+Santa Barbara Museum of Natural History.
+
+Column names are [Dawin Core](http://rs.tdwg.org/dwc/terms/) terms which have
+standardized definitions that you can read about in the specification. There
+are a few columns that iDigBio has added that are not standard and they are
+noted. Below is a brief description of the information in this data set:
+
+| Column           | Description                                 |
+|------------------|---------------------------------------------|
+| id               | A globally unique identifier for the record |
+| institutionCode  | An identifier for the institution           |
+| collectionCode   | Identifies the collection at an institution |
+| catalogNumber    | Legacy identifier of the speciemen          |
+| recordedBy       | Who collected it                            |
+| dataQualityScore | iDigBio metric for how complete the data is |
+| hasImage         | iDigBio flag for if there is an image       |
+| isoCountryCode   | 3 letter abbreviation of counrty            |
+| stateProvince	   | State where speciemen was collected         |
+| county           | County where speciment was collected        |
+| locality         | Textual description of collection location  |
+| geoPoint         | Latitute and longitude                      |
+| eventDate        | When the specimen was collected             |
+| startDayOfYear   | Julian day of year                          |
+| family           | Taxanomic family of the specimen            |
+| genus            | Genus                                       |
+| infraspecificEpithet | Subspecies                              |
+| specificEpithet  | Species                                     |
+| scientificName   | Full textual taxanomic name                 |
+
 
 We are going to use the R function `download.file()` to download the CSV file
 that contains the survey data from figshare, and we will use `read.csv()` to
 load into memory the content of the CSV file as an object of class `data.frame`.
 
 To download the data into the `data/` subdirectory, run the following:
+
+FIXME: Data path
 
 ```{r, eval=FALSE, purl=TRUE}
 download.file("https://ndownloader.figshare.com/files/2292169",
@@ -61,19 +82,19 @@ download.file("https://ndownloader.figshare.com/files/2292169",
 You are now ready to load the data:
 
 ```{r, eval=TRUE,  purl=FALSE}
-surveys <- read.csv('data/portal_data_joined.csv')
+specimens <- read.csv('data/editedBeetleDataset_withSQLtableSuggestions_YearMonthDayColumnsAdded_19October2017.csv')
 ```
 
 This statement doesn't produce any output because, as you might recall,
 assignments don't display anything. If we want to check that our data has been
-loaded, we can print the variable's value: `surveys`.
+loaded, we can print the variable's value: `specimens`.
 
 Wow... that was a lot of output. At least it means the data loaded
 properly. Let's check the top (the first 6 lines) of this data frame using the
 function `head()`:
 
 ```{r, results='show', purl=FALSE}
-head(surveys)
+head(specimens)
 ```
 
 ## What are data frames?
@@ -98,7 +119,7 @@ We can see this when inspecting the <b>str</b>ucture of a data frame
 with the function `str()`:
 
 ```{r, purl=FALSE}
-str(surveys)
+str(specimens)
 ```
 
 ## Inspecting `data.frame` Objects
@@ -108,25 +129,25 @@ content and the structure of a data frame. Here is a non-exhaustive list of
 functions to get a sense of the content/structure of the data. Let's try them out!
 
 * Size:
-    * `dim(surveys)` - returns a vector with the number of rows in the first element,
+    * `dim(specimens)` - returns a vector with the number of rows in the first element,
           and the number of columns as the second element (the **dim**ensions of
           the object)
-    * `nrow(surveys)` - returns the number of rows
-    * `ncol(surveys)` - returns the number of columns
+    * `nrow(specimens)` - returns the number of rows
+    * `ncol(specimens)` - returns the number of columns
 
 * Content:
-    * `head(surveys)` - shows the first 6 rows
-    * `tail(surveys)` - shows the last 6 rows
+    * `head(specimens)` - shows the first 6 rows
+    * `tail(specimens)` - shows the last 6 rows
 
 * Names:
-    * `names(surveys)` - returns the column names (synonym of `colnames()` for `data.frame`
+    * `names(specimens)` - returns the column names (synonym of `colnames()` for `data.frame`
 	   objects)
-    * `rownames(surveys)` - returns the row names
+    * `rownames(specimens)` - returns the row names
 
 * Summary:
-    * `str(surveys)` - structure of the object and information about the class, length and
+    * `str(specimens)` - structure of the object and information about the class, length and
 	   content of  each column
-    * `summary(surveys)` - summary statistics for each column
+    * `summary(specimens)` - summary statistics for each column
 
 Note: most of these functions are "generic", they can be used on other types of
 objects besides `data.frame`.
@@ -134,19 +155,19 @@ objects besides `data.frame`.
 
 > ### Challenge
 >
-> Based on the output of `str(surveys)`, can you answer the following questions?
+> Based on the output of `str(specimens)`, can you answer the following questions?
 >
-> * What is the class of the object `surveys`?
+> * What is the class of the object `specimens`?
 > * How many rows and how many columns are in this object?
-> * How many species have been recorded during these surveys?
+> * How many genera are represented by these specimens?
 
 ```{r, echo=FALSE, purl=TRUE}
 
 ## Challenge
-## Based on the output of `str(surveys)`, can you answer the following questions?
-## * What is the class of the object `surveys`?
+## Based on the output of `str(specimens)`, can you answer the following questions?
+## * What is the class of the object `specimens`?
 ## * How many rows and how many columns are in this object?
-## * How many species have been recorded during these surveys?
+## * How many genera are represented by these specimens?
 
 ```
 
@@ -155,8 +176,8 @@ objects besides `data.frame`.
 ## Answers
 ##
 ## * class: data frame
-## * how many rows: 34786,  how many columns: 13
-## * how many species: 48
+## * how many rows: 25429,  how many columns: 19
+## * how many genera: 93
 ```
 --->
 
@@ -176,13 +197,13 @@ that different ways of specifying these coordinates lead to results with
 different classes.
 
 ```{r, purl=FALSE}
-surveys[1, 1]   # first element in the first column of the data frame (as a vector)
-surveys[1, 6]   # first element in the 6th column (as a vector)
-surveys[, 1]    # first column in the data frame (as a vector)
-surveys[1]      # first column in the data frame (as a data.frame)
-surveys[1:3, 7] # first three elements in the 7th column (as a vector)
-surveys[3, ]    # the 3rd element for all columns (as a data.frame)
-head_surveys <- surveys[1:6, ] # equivalent to head(surveys)
+specimens[1, 1]   # first element in the first column of the data frame (as a vector)
+specimens[1, 6]   # first element in the 6th column (as a vector)
+specimens[, 1]    # first column in the data frame (as a vector)
+specimens[1]      # first column in the data frame (as a data.frame)
+specimens[1:3, 7] # first three elements in the 7th column (as a vector)
+specimens[3, ]    # the 3rd element for all columns (as a data.frame)
+head_specimens <- specimens[1:6, ] # equivalent to head(specimens)
 ```
 
 `:` is a special function that creates numeric vectors of integers in increasing
@@ -191,18 +212,18 @@ or decreasing order, test `1:10` and `10:1` for instance.
 You can also exclude certain parts of a data frame using the "`-`" sign:
 
 ```{r, purl=FALSE}
-surveys[,-1]          # The whole data frame, except the first column
-surveys[-c(7:34786),] # Equivalent to head(surveys)
+specimens[,-1]          # The whole data frame, except the first column
+specimens[-c(7:25429),] # Equivalent to head(specimens)
 ```
 
 As well as using numeric values to subset a `data.frame` (or `matrix`), columns
 can be called by name, using one of the four following notations:
 
 ```{r, eval = FALSE, purl=FALSE}
-surveys["species_id"]       # Result is a data.frame
-surveys[, "species_id"]     # Result is a vector
-surveys[["species_id"]]     # Result is a vector
-surveys$species_id          # Result is a vector
+specimens["genus"]       # Result is a data.frame
+specimens[, "genus"]     # Result is a vector
+specimens[["genus"]]     # Result is a vector
+specimens$genus          # Result is a vector
 ```
 
 For our purposes, the last three notations are equivalent. RStudio knows about
@@ -211,8 +232,8 @@ feature to get the full and correct column name.
 
 > ### Challenge
 >
-> 1. Create a `data.frame` (`surveys_200`) containing only the observations from
->    row 200 of the `surveys` dataset.
+> 1. Create a `data.frame` (`specimens_200`) containing only the observations from
+>    row 200 of the `specimens` dataset.
 >
 > 2. Notice how `nrow()` gave you the number of rows in a `data.frame`?
 >
@@ -220,21 +241,21 @@ feature to get the full and correct column name.
 >      * Compare that with what you see as the last row using `tail()` to make
 >        sure it's meeting expectations.
 >      * Pull out that last row using `nrow()` instead of the row number.
->      * Create a new data frame object (`surveys_last`) from that last row.
+>      * Create a new data frame object (`specimens_last`) from that last row.
 >
 > 3. Use `nrow()` to extract the row that is in the middle of the data
->    frame. Store the content of this row in an object named `surveys_middle`.
+>    frame. Store the content of this row in an object named `specimens_middle`.
 >
 > 4. Combine `nrow()` with the `-` notation above to reproduce the behavior of
->    `head(surveys)` keeping just the first through 6th rows of the surveys
+>    `head(specimens)` keeping just the first through 6th rows of the specimens
 >    dataset.
 
 
 ```{r, echo=FALSE, purl=TRUE}
 ### Challenges:
 ###
-### 1. Create a `data.frame` (`surveys_200`) containing only the
-###    observations from row 200 of the `surveys` dataset.
+### 1. Create a `data.frame` (`specimens_200`) containing only the
+###    observations from row 200 of the `specimens` dataset.
 ###
 ### 2. Notice how `nrow()` gave you the number of rows in a `data.frame`?
 ###
@@ -242,14 +263,14 @@ feature to get the full and correct column name.
 ###      * Compare that with what you see as the last row using `tail()` to make
 ###        sure it's meeting expectations.
 ###      * Pull out that last row using `nrow()` instead of the row number
-###      * Create a new data frame object (`surveys_last`) from that last row
+###      * Create a new data frame object (`specimens_last`) from that last row
 ###
 ### 3. Use `nrow()` to extract the row that is in the middle of the
 ###    data frame. Store the content of this row in an object named
-###    `surveys_middle`.
+###    `specimens_middle`.
 ###
 ### 4. Combine `nrow()` with the `-` notation above to reproduce the behavior of
-###    `head(surveys)` keeping just the first through 6th rows of the surveys
+###    `head(specimens)` keeping just the first through 6th rows of the specimens
 ###    dataset.
 
 ```
@@ -257,10 +278,10 @@ feature to get the full and correct column name.
 <!---
 ```{r, purl=FALSE}
 ## Answers
-surveys_200 <- surveys[200, ]
-surveys_last <- surveys[nrow(surveys), ]
-surveys_middle <- surveys[nrow(surveys)/2, ]
-surveys_head <- surveys[-c(7:nrow(surveys)),]
+specimens_200 <- specimens[200, ]
+specimens_last <- specimens[nrow(specimens), ]
+specimens_middle <- specimens[nrow(specimens)/2, ]
+specimens_head <- specimens[-c(7:nrow(specimens)),]
 ```
 --->
 
@@ -271,8 +292,8 @@ surveys_head <- surveys[-c(7:nrow(surveys)),]
 ### Factors
 ```
 
-When we did `str(surveys)` we saw that several of the columns consist of
-integers, however, the columns `genus`, `species`, `sex`, `plot_type`, ... are
+When we did `str(specimens)` we saw that several of the columns consist of
+integers, however, the columns `genus`, `county`, `catalogNumber`, `id`, ... are
 of a special class called a `factor`. Factors are very useful and are actually
 something that make R particularly well suited to working with data, so we're
 going to spend a little time introducing them.
@@ -291,17 +312,17 @@ Once created, factors can only contain a pre-defined set of values, known as
 instance, if you have a factor with 2 levels:
 
 ```{r, purl=TRUE}
-sex <- factor(c("male", "female", "female", "male"))
+genus <- factor(c("omus", "amara", "amara", "omus"))
 ```
 
-R will assign `1` to the level `"female"` and `2` to the level `"male"` (because
-`f` comes before `m`, even though the first element in this vector is
-`"male"`). You can check this by using the function `levels()`, and check the
+R will assign `1` to the level `"amara"` and `2` to the level `"omus"` (because
+`a` comes before `o`, even though the first element in this vector is
+`"omus"`). You can check this by using the function `levels()`, and check the
 number of levels using `nlevels()`:
 
 ```{r, purl=FALSE}
-levels(sex)
-nlevels(sex)
+levels(genus)
+nlevels(genus)
 ```
 
 Sometimes, the order of the factors does not matter, other times you might want
@@ -310,17 +331,17 @@ it improves your visualization, or it is required by a particular type of
 analysis. Here, one way to reorder our levels in the `sex` vector would be:
 
 ```{r, results=TRUE, purl=FALSE}
-sex # current order
-sex <- factor(sex, levels = c("male", "female"))
-sex # after re-ordering
+genus # current order
+genus <- factor(genus, levels = c("omus", "amara"))
+genus # after re-ordering
 ```
 
 In R's memory, these factors are represented by integers (1, 2, 3), but are more
-informative than integers because factors are self describing: `"female"`,
-`"male"` is more descriptive than `1`, `2`. Which one is "male"?  You wouldn't
+informative than integers because factors are self describing: `"amara"`,
+`"omus"` is more descriptive than `1`, `2`. Which one is "omus"?  You wouldn't
 be able to tell just from the integer data. Factors, on the other hand, have
 this information built in. It is particularly helpful when there are many levels
-(like the species names in our example dataset).
+(like the genera in our example dataset).
 
 ### Converting factors
 
@@ -328,7 +349,7 @@ If you need to convert a factor to a character vector, you use
 `as.character(x)`.
 
 ```{r, purl=FALSE}
-as.character(sex)
+as.character(genus)
 ```
 
 Converting factors where the levels appear as numbers (such as concentration
@@ -359,7 +380,7 @@ the experiment:
 
 ```{r, purl=TRUE}
 ## bar plot of the number of females and males captured during the experiment:
-plot(surveys$sex)
+plot(specimens$institutionCode)
 ```
 
 In addition to males and females, there are about 1700 individuals for which the
@@ -370,7 +391,7 @@ the data on sex and work with that data, so we're not modifying the working copy
 of the data frame:
 
 ```{r, results=TRUE, purl=FALSE}
-sex <- surveys$sex
+sex <- specimens$sex
 head(sex)
 levels(sex)
 levels(sex)[1] <- "missing"
@@ -416,19 +437,19 @@ In most cases, it's preferable to set `stringsAsFactors = FALSE` when importing
 your data, and converting as a factor only the columns that require this data
 type.
 
-Compare the output of `str(surveys)` when setting `stringsAsFactors = TRUE`
+Compare the output of `str(specimens)` when setting `stringsAsFactors = TRUE`
 (default) and `stringsAsFactors = FALSE`:
 
 
 ```{r, eval=FALSE, purl=FALSE}
 ## Compare the difference between when the data are being read as
 ## `factor`, and when they are being read as `character`.
-surveys <- read.csv("data/portal_data_joined.csv", stringsAsFactors = TRUE)
-str(surveys)
-surveys <- read.csv("data/portal_data_joined.csv", stringsAsFactors = FALSE)
-str(surveys)
+specimens <- read.csv("data/portal_data_joined.csv", stringsAsFactors = TRUE)
+str(specimens)
+specimens <- read.csv("data/portal_data_joined.csv", stringsAsFactors = FALSE)
+str(specimens)
 ## Convert the column "plot_type" into a factor
-surveys$plot_type <- factor(surveys$plot_type)
+specimens$plot_type <- factor(specimens$plot_type)
 ```
 
 
@@ -524,7 +545,7 @@ variable. Using `str()`, We can confirm that our data frame has a separate colum
 day, month, and year, and each contains integer values.
 
 ```{r, eval=FALSE, purl=FALSE}
-str(surveys)
+str(specimens)
 ```
 
 We're going to be using the `ymd()` function from the package **`lubridate`**. This
@@ -539,25 +560,25 @@ Start by loading the required package:
 library(lubridate)
 ```
 
-Create a character vector from the `year`, `month`, and `day` columns of `surveys` using `paste()`:
+Create a character vector from the `year`, `month`, and `day` columns of `specimens` using `paste()`:
 
 ```{r, eval=FALSE, purl=FALSE}
-paste(surveys$year, surveys$month, surveys$day, sep="-")
+paste(specimens$year, specimens$month, specimens$day, sep="-")
 # sep indicates the character to use to separate each component
 ```
 
 This character vector can be used as the argument for `ymd()`:
 
 ```{r, eval=FALSE, purl=FALSE}
-ymd(paste(surveys$year, surveys$month, surveys$day, sep="-"))
+ymd(paste(specimens$year, specimens$month, specimens$day, sep="-"))
 ```
 
-The resulting POSIXct vector can be added to `surveys` as a new column called `date`:
+The resulting POSIXct vector can be added to `specimens` as a new column called `date`:
 
 ```{r, eval=FALSE, purl=FALSE}
-surveys$date <- ymd(paste(surveys$year, surveys$month, surveys$day, sep="-"))
+specimens$date <- ymd(paste(specimens$year, specimens$month, specimens$day, sep="-"))
 
-str(surveys) # notice the new column, with 'date' as the class
+str(specimens) # notice the new column, with 'date' as the class
 ```
 
 <p style="text-align: right; font-size: small;">Page build on: `r format(Sys.time())`</p>
