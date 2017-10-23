@@ -337,7 +337,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/datacarpentry/R-ecology-lesson">
+  <a href="https://github.com/data-lessons/R-nhcdata-lesson">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -401,7 +401,7 @@ div.tocify {
 <p>(You can use the <code>src_mysql()</code>, <code>src_postgres()</code> and <code>src_bigquery()</code> to connect to the other database types supported by <strong><code>dplyr</code></strong>.)</p>
 <p>Let’s take a closer look at the <code>mammals</code> database we just connected to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mammals</code></pre></div>
-<pre><code>#&gt; src:  sqlite 3.19.3 [/home/francois/sandbox/R-ecology-lesson/data/portal_mammals.sqlite]
+<pre><code>#&gt; src:  sqlite 3.19.3 [/home/mcollins/Git/R-nhcdata-lesson/data/portal_mammals.sqlite]
 #&gt; tbls: plots, species, surveys</code></pre>
 <p>Just like a spreadsheet with multiple worksheets, a SQLite database can contain multiple tables. In this case three of them are listed in the <code>tbls</code> row in the output above:</p>
 <ul>
@@ -426,7 +426,7 @@ surveys %&gt;%
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(surveys, <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
 <pre><code>#&gt; # Source:   lazy query [?? x 9]
 #&gt; # Database: sqlite 3.19.3
-#&gt; #   [/home/francois/sandbox/R-ecology-lesson/data/portal_mammals.sqlite]
+#&gt; #   [/home/mcollins/Git/R-nhcdata-lesson/data/portal_mammals.sqlite]
 #&gt;    record_id month   day  year plot_id species_id   sex hindfoot_length
 #&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;      &lt;chr&gt; &lt;chr&gt;           &lt;int&gt;
 #&gt;  1         1     7    16  1977       2         NL     M              32
@@ -482,7 +482,7 @@ surveys %&gt;%
 <span class="st">  </span><span class="kw">select</span>(species_id, sex, weight)</code></pre></div>
 <pre><code>#&gt; # Source:   lazy query [?? x 3]
 #&gt; # Database: sqlite 3.19.3
-#&gt; #   [/home/francois/sandbox/R-ecology-lesson/data/portal_mammals.sqlite]
+#&gt; #   [/home/mcollins/Git/R-nhcdata-lesson/data/portal_mammals.sqlite]
 #&gt;    species_id   sex weight
 #&gt;         &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;
 #&gt;  1         PF     M      4
@@ -522,7 +522,7 @@ data_subset %&gt;%
 <span class="st">  </span><span class="kw">select</span>(-sex)</code></pre></div>
 <pre><code>#&gt; # Source:   lazy query [?? x 2]
 #&gt; # Database: sqlite 3.19.3
-#&gt; #   [/home/francois/sandbox/R-ecology-lesson/data/portal_mammals.sqlite]
+#&gt; #   [/home/mcollins/Git/R-nhcdata-lesson/data/portal_mammals.sqlite]
 #&gt;    species_id weight
 #&gt;         &lt;chr&gt;  &lt;int&gt;
 #&gt;  1         PF      4
@@ -554,7 +554,7 @@ data_subset %&gt;%
 plots</code></pre></div>
 <pre><code>#&gt; # Source:   table&lt;plots&gt; [?? x 2]
 #&gt; # Database: sqlite 3.19.3
-#&gt; #   [/home/francois/sandbox/R-ecology-lesson/data/portal_mammals.sqlite]
+#&gt; #   [/home/mcollins/Git/R-nhcdata-lesson/data/portal_mammals.sqlite]
 #&gt;    plot_id                 plot_type
 #&gt;      &lt;int&gt;                     &lt;chr&gt;
 #&gt;  1       1         Spectab exclosure
@@ -572,7 +572,7 @@ plots</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys</code></pre></div>
 <pre><code>#&gt; # Source:   table&lt;surveys&gt; [?? x 9]
 #&gt; # Database: sqlite 3.19.3
-#&gt; #   [/home/francois/sandbox/R-ecology-lesson/data/portal_mammals.sqlite]
+#&gt; #   [/home/mcollins/Git/R-nhcdata-lesson/data/portal_mammals.sqlite]
 #&gt;    record_id month   day  year plot_id species_id   sex hindfoot_length
 #&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;      &lt;chr&gt; &lt;chr&gt;           &lt;int&gt;
 #&gt;  1         1     7    16  1977       2         NL     M              32
@@ -714,7 +714,7 @@ my_db</code></pre></div>
 </blockquote>
 <p><strong>Note:</strong> In this example, we first loaded all of the data into the R session by reading the three <code>csv</code> files. Because all the data has to flow through R, this is not suitable for very large datasets.</p>
 <p style="text-align: right; font-size: small;">
-Page build on: 2017-08-11 10:24:30
+Page build on: 2017-10-23 13:50:36
 </p>
 </div>
 

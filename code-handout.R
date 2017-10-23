@@ -47,22 +47,22 @@
 ## 2. Use the function `median()` to calculate the median of the `lengths` vector.
 
 
-### Presentation of the survey data
+### Presentation of the Carabidae beetle data
 ## download.file("https://ndownloader.figshare.com/files/2292169",
 ##               "data/portal_data_joined.csv")
 
 ## Challenge
-## Based on the output of `str(surveys)`, can you answer the following questions?
-## * What is the class of the object `surveys`?
+## Based on the output of `str(specimens)`, can you answer the following questions?
+## * What is the class of the object `specimens`?
 ## * How many rows and how many columns are in this object?
-## * How many species have been recorded during these surveys?
+## * How many genera are represented by these specimens?
 
 
 ## Indexing and subsetting data frames
 ### Challenges:
 ###
-### 1. Create a `data.frame` (`surveys_200`) containing only the
-###    observations from row 200 of the `surveys` dataset.
+### 1. Create a `data.frame` (`specimens_200`) containing only the
+###    observations from row 200 of the `specimens` dataset.
 ###
 ### 2. Notice how `nrow()` gave you the number of rows in a `data.frame`?
 ###
@@ -70,14 +70,14 @@
 ###      * Compare that with what you see as the last row using `tail()` to make
 ###        sure it's meeting expectations.
 ###      * Pull out that last row using `nrow()` instead of the row number
-###      * Create a new data frame object (`surveys_last`) from that last row
+###      * Create a new data frame object (`specimens_last`) from that last row
 ###
 ### 3. Use `nrow()` to extract the row that is in the middle of the
 ###    data frame. Store the content of this row in an object named
-###    `surveys_middle`.
+###    `specimens_middle`.
 ###
 ### 4. Combine `nrow()` with the `-` notation above to reproduce the behavior of
-###    `head(surveys)` keeping just the first through 6th rows of the surveys
+###    `head(specimens)` keeping just the first through 6th rows of the specimens
 ###    dataset.
 
 ### Factors
@@ -87,12 +87,12 @@ as.numeric(f)               # wrong! and there is no warning...
 as.numeric(as.character(f)) # works...
 as.numeric(levels(f))[f]    # The recommended way.
 ## bar plot of the number of females and males captured during the experiment:
-plot(surveys$sex)
+plot(specimens$sex)
 ## Challenges
 ##
 ## * Rename "F" and "M" to "female" and "male" respectively.
 ## * Now that we have renamed the factor level to "missing", can you recreate the
-##   barplot such that "missing" is last (after "male")
+##   barplot such that "missing" is last (after "M")
 ## ## Challenge:
 ## ##  There are a few mistakes in this hand-crafted `data.frame`,
 ## ##  can you spot and fix them? Don't hesitate to experiment!
@@ -121,22 +121,22 @@ plot(surveys$sex)
 ## ##  before 1995, and retain the columns `year`, `sex`, and `weight.`
 ## 
 ## ## Mutate Challenge:
-## ##  Create a new data frame from the `surveys` data that meets the following
-## ##  criteria: contains only the `species_id` column and a column that
-## ##  contains values that are half the `hindfoot_length` values (e.g. a
+## ##  Create a new data frame from the `specimens` data that meets the following
+## ##  criteria: contains only the `scientificName` column and a column that
+## ##  contains values that are half the `length` values (e.g. a
 ## ##  new column `hindfoot_half`). In this `hindfoot_half` column, there are
 ## ##  no NA values and all values are < 30.
 ## 
 ## ##  Hint: think about how the commands should be ordered to produce this data frame!
 ## 
 ## ## Tally Challenges:
-## ##  1. How many individuals were caught in each `plot_type` surveyed?
+## ##  1. How many individuals were caught in each `stateProvince` surveyed?
 ## 
 ## ##  2. Use `group_by()` and `summarize()` to find the mean, min, and
-## ##  max hindfoot length for each species (using `species_id`).
+## ##  max hindfoot length for each species (using `scientificName`).
 ## 
 ## ##  3. What was the heaviest animal measured in each year? Return the
-## ##  columns `year`, `genus`, `species_id`, and `weight`.
+## ##  columns `year`, `genus`, `scientificName`, and `weight`.
 ## 
 ## ## 4. You saw above how to count the number of individuals of each `sex` using a
 ## ## combination of `group_by()` and `tally()`. How could you get the same result
@@ -144,40 +144,40 @@ plot(surveys$sex)
 ## 
 ## ## Reshaping challenges
 ## 
-## ## 1. Make a wide data frame with `year` as columns, `plot_id`` as rows, and the values are the number of genera per plot. You will need to summarize before reshaping, and use the function `n_distinct` to get the number of unique types of a genera. It's a powerful function! See `?n_distinct` for more.
+## ## 1. Make a wide data frame with `year` as columns, `stateProvince`` as rows, and the values are the number of genera per plot. You will need to summarize before reshaping, and use the function `n_distinct` to get the number of unique types of a genera. It's a powerful function! See `?n_distinct` for more.
 ## 
-## ## 2. Now take that data frame, and make it long again, so each row is a unique `plot_id` `year` combination
+## ## 2. Now take that data frame, and make it long again, so each row is a unique `stateProvince` `year` combination
 ## 
-## ## 3. The `surveys` data set is not truly wide or long because there are two columns of measurement - `hindfoot_length` and `weight`.  This makes it difficult to do things like look at the relationship between mean values of each measurement per year in different plot types. Let's walk through a common solution for this type of problem. First, use `gather` to create a truly long dataset where we have a key column called `measurement` and a `value` column that takes on the value of either `hindfoot_length` or `weight`. Hint: You'll need to specify which columns are being gathered.
+## ## 3. The `specimens` data set is not truly wide or long because there are two columns of measurement - `length` and `weight`.  This makes it difficult to do things like look at the relationship between mean values of each measurement per year in different plot types. Let's walk through a common solution for this type of problem. First, use `gather` to create a truly long dataset where we have a key column called `measurement` and a `value` column that takes on the value of either `length` or `weight`. Hint: You'll need to specify which columns are being gathered.
 ## 
-## ## 4. With this new truly long data set, calculate the average of each `measurement` in each `year` for each different `plot_type`. Then `spread` them into a wide data set with a column for `hindfoot_length` and `weight`. Hint: Remember, you only need to specify the key and value columns for `spread`.
+## ## 4. With this new truly long data set, calculate the average of each `measurement` in each `year` for each different `stateProvince`. Then `spread` them into a wide data set with a column for `length` and `weight`. Hint: Remember, you only need to specify the key and value columns for `spread`.
 ## 
 ## ### Create the dataset for exporting:
-## ##  Start by removing observations for which the `species_id`, `weight`,
-## ##  `hindfoot_length`, or `sex` data are missing:
-## surveys_complete <- surveys %>%
-##   filter(species_id != "",        # remove missing species_id
+## ##  Start by removing observations for which the `scientificName`, `weight`,
+## ##  `length`, or `sex` data are missing:
+## specimens_complete <- specimens %>%
+##   filter(genus != "",        # remove missing scientificName
 ##   !is.na(weight),                 # remove missing weight
-## 		  !is.na(hindfoot_length),        # remove missing hindfoot_length
+## 		  !is.na(length),        # remove missing length
 ## 		  sex != "")                      # remove missing sex
 ## 
 ## ##  Now remove rare species in two steps. First, make a list of species which
 ## ##  appear at least 50 times in our dataset:
-## species_counts <- surveys_complete %>%
-##               group_by(species_id) %>%
+## species_counts <- specimens_complete %>%
+##               group_by(scientificName) %>%
 ##               tally %>%
 ## 				          filter(n >= 50) %>%
-## 				          select(species_id)
+## 				          select(scientificName)
 ## 
 ## ##  Second, keep only those species:
-## surveys_complete <- surveys_complete %>%
-##              filter(species_id %in% species_counts$species_id)
+## specimens_complete <- specimens_complete %>%
+##              filter(scientificName %in% species_counts$scientificName)
 ## 
 
 
 ### Data Visualization with ggplot2
 ## install.packages("hexbin")
-## surveys_plot +
+## specimens_plot +
 ##  geom_hex()
 ## ### Challenge with hexbin
 ## ##
@@ -188,7 +188,7 @@ plot(surveys$sex)
 ## 
 ## ## Then use the `geom_hex()` function:
 ## 
-## surveys_plot +
+## specimens_plot +
 ##     geom_hex()
 ## 
 ## ## What are the relative strengths and weaknesses of a hexagonal bin
@@ -196,11 +196,11 @@ plot(surveys$sex)
 ## ### Challenge with scatter plot:
 ## ##
 ## ##  Use what you just learned to create a scatter plot of `weight`
-## ## over `species_id` with the plot types showing in different colors.
+## ## over `scientificName` with the plot types showing in different colors.
 ## ## Is this a good way to show this type of data?
 ## ## Challenge with boxplots:
 ## ##  Start with the boxplot we created:
-## ggplot(data = surveys_complete, aes(x = species_id, y = weight)) +
+## ggplot(data = specimens_complete, aes(x = scientificName, y = weight)) +
 ##   geom_boxplot(alpha = 0) +
 ##   geom_jitter(alpha = 0.3, color = "tomato")
 ## 
@@ -208,7 +208,7 @@ plot(surveys$sex)
 ## 
 ## ##  2. Represent weight on the log10 scale; see `scale_y_log10()`.
 ## 
-## ##  3. Create boxplot for `hindfoot_length` overlaid on a jitter layer.
+## ##  3. Create boxplot for `length` overlaid on a jitter layer.
 ## 
 ## ##  4. Add color to the datapoints on your boxplot according to the
 ## ##  plot from which the sample was taken (`plot_id`).
