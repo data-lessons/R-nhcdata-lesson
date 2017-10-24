@@ -117,7 +117,7 @@ specimens %>%
 ```
 
 In the above, we use the pipe to send the `specimens` dataset first through
-`filter()` to keep rows where `weight` is less than 5, then through `select()`
+`filter()` to keep rows where `weight` is less than 50, then through `select()`
 to keep only the `scientificName`, `sex`, and `weight` columns. Since `%>%` takes
 the object on its left and passes it as the first argument to the function on
 its right, we don't need to explicitly include it as an argument to the
@@ -138,7 +138,7 @@ Note that the final data frame is the leftmost part of this expression.
 
 > ### Challenge {.challenge}
 >
->  Using pipes, subset the `survey` data to include individuals collected before
+>  Using pipes, subset the `specimens` data to include individuals collected before
 >  1995 and retain only the columns `year`, `sex`, and `weight`.
 
 <!---
@@ -192,7 +192,7 @@ Note that we don't include parentheses at the end of our call to `head()` above.
 When piping into a function with no additional arguments, you can call the
 function with or without parentheses (e.g. `head` or `head()`).
 
-The first few rows of the output are full of `NA`s, if we wanted to remove those
+Remember that some of our weights are `NA`s, if we wanted to remove those
 we could insert a `filter()` in the chain:
 
 ```{r, purl = FALSE}
@@ -209,8 +209,8 @@ symbol negates the result, so we're asking for everything that *is not* an `NA`.
 >
 >  Create a new data frame from the `specimens` data that meets the following
 >  criteria: contains only the `scientificName` column and a new column called
->  `hindfoot_half` containing values that are half the `length` values.
->  In this `hindfoot_half` column, there are no `NA`s and all values are less
+>  `weight_half` containing values that are half the `weight` values.
+>  In this `weight_half` column, there are no `NA`s and all values are less
 >  than 30.
 >
 >  **Hint**: think about how the commands should be ordered to produce this data frame!
@@ -218,11 +218,11 @@ symbol negates the result, so we're asking for everything that *is not* an `NA`.
 <!---
 ```{r, eval=FALSE, purl=FALSE}
 ## Answer
-specimens_hindfoot_half <- specimens %>%
-    filter(!is.na(length)) %>%
-    mutate(hindfoot_half = length / 2) %>%
-    filter(hindfoot_half < 30) %>%
-    select(scientificName, hindfoot_half)
+specimens_weight_half <- specimens %>%
+    filter(!is.na(weight)) %>%
+    mutate(weight_half = weight / 2) %>%
+    filter(weight_half < 30) %>%
+    select(scientificName, weight_half)
 ```
 --->
 
@@ -230,8 +230,8 @@ specimens_hindfoot_half <- specimens %>%
     ## Mutate Challenge:
     ##  Create a new data frame from the `specimens` data that meets the following
     ##  criteria: contains only the `scientificName` column and a column that
-    ##  contains values that are half the `length` values (e.g. a
-    ##  new column `hindfoot_half`). In this `hindfoot_half` column, there are
+    ##  contains values that are half the `weight` values (e.g. a
+    ##  new column `weight_half`). In this `weight_half` column, there are
     ##  no NA values and all values are < 30.
 
     ##  Hint: think about how the commands should be ordered to produce this data frame!
@@ -277,7 +277,7 @@ specimens %>%
 ```
 
 When grouping both by `sex` and `scientificName`, the first rows are for individuals
-that escaped before their sex could be determined and weighted. 
+that have not had a sex determined. 
 
 We can also remove the missing values for weight before we
 attempt to calculate the summary statistics on weight. Because the missing
@@ -337,7 +337,7 @@ counts the total number of records for each category.
 >
 > 1. How many individuals were caught in each `stateProvince` surveyed?
 >
-> 2. Use `group_by()` and `summarize()` to find the mean, min, and max hindfoot
+> 2. Use `group_by()` and `summarize()` to find the mean, min, and max 
 > length for each species (using `scientificName`).
 >
 > 3. What was the heaviest animal measured in each year? Return the columns `year`,
@@ -385,7 +385,7 @@ specimens %>%
 ##  1. How many individuals were caught in each `stateProvince` surveyed?
 
 ##  2. Use `group_by()` and `summarize()` to find the mean, min, and
-##  max hindfoot length for each species (using `scientificName`).
+##  max length for each species (using `scientificName`).
 
 ##  3. What was the heaviest animal measured in each year? Return the
 ##  columns `year`, `genus`, `scientificName`, and `weight`.
@@ -412,11 +412,11 @@ To answer that question, we'd want each plot to have a single row, with all of
 the measurements in a single plot having their own column. This is called a
 **wide** data format. For the `specimens` data as we have it right now, this is
 going to be one heck of a wide data frame! However, if we were to summarize data
-within plots and species, we might begin to have some relationships we'd want to
+within states and genus, we might begin to have some relationships we'd want to
 examine.
 
 Let's see this in action. First, using **`dplyr`**, let's create a data frame
-with the mean body weight of each genera by institution.
+with the mean body weight of each genera by state.
 
 ```{r, purl=FALSE}
 specimens_gw <- specimens %>%
@@ -486,7 +486,7 @@ specimens_gw_wide %>%
 > ### Challenge {.challenge}
 >
 > 1. Make a wide data frame with `year` as columns, `stateProvince` as rows, and the
->   values are the number of genera per plot. You will need to summarize before
+>   values are the number of genera per state. You will need to summarize before
 >   reshaping, and use the function `n_distinct` to get the number of unique
 >   types of a genera. It's a powerful function! See `?n_distinct` for more.
 >
@@ -511,7 +511,7 @@ specimens_gw_wide %>%
 ```{r, eval=FALSE, purl=TRUE, echo=FALSE}
 ## Reshaping challenges
 
-## 1. Make a wide data frame with `year` as columns, `stateProvince`` as rows, and the values are the number of genera per plot. You will need to summarize before reshaping, and use the function `n_distinct` to get the number of unique types of a genera. It's a powerful function! See `?n_distinct` for more.
+## 1. Make a wide data frame with `year` as columns, `stateProvince`` as rows, and the values are the number of genera per state. You will need to summarize before reshaping, and use the function `n_distinct` to get the number of unique types of a genera. It's a powerful function! See `?n_distinct` for more.
 
 ## 2. Now take that data frame, and make it long again, so each row is a unique `stateProvince` `year` combination
 
@@ -577,7 +577,7 @@ observations of animals for which the sex has been determined:
 
 ```{r, purl=FALSE}
 specimens_complete <- specimens %>%
-  filter(genus != "",         # remove missing scientificName
+  filter(scientificName != "",         # remove missing scientificName
          !is.na(weight),           # remove missing weight
          !is.na(length),  # remove missing length
          sex != "")                # remove missing sex
@@ -607,7 +607,7 @@ specimens_complete <- specimens_complete %>%
     ##  Start by removing observations for which the `scientificName`, `weight`,
     ##  `length`, or `sex` data are missing:
     specimens_complete <- specimens %>%
-      filter(genus != "",        # remove missing scientificName
+      filter(scientificName != "",        # remove missing scientificName
       !is.na(weight),                 # remove missing weight
 		  !is.na(length),        # remove missing length
 		  sex != "")                      # remove missing sex
