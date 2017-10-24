@@ -198,19 +198,19 @@ Or to color each species in the plot differently:
 
 ```{r color-by-species, purl=FALSE}
 ggplot(data = specimens_complete, aes(x = weight, y = length)) +
-    geom_point(alpha = 0.1, aes(color=scientificName))
+    geom_point(alpha = 0.1, aes(color=genus))
 ```
 
 > ### Challenge
 >
-> Use what you just learned to create a scatter plot of `weight` over `scientificName` with the plot types showing in different colors.
+> Use what you just learned to create a scatter plot of `weight` over `scientificName` with the genera showing in different colors.
 > Is this a good way to show this type of data?
 
 ```{r scatter-challenge, echo=FALSE, eval=FALSE, purl=TRUE}
 ### Challenge with scatter plot:
 ##
 ##  Use what you just learned to create a scatter plot of `weight`
-## over `scientificName` with the plot types showing in different colors.
+## over `scientificName` with the genera showing in different colors.
 ## Is this a good way to show this type of data?
 ```
 
@@ -259,10 +259,10 @@ hidden?
 >
 > - Create boxplot for `length`.  Overlay the boxplot layer on a jitter layer to show actual measurements.
 >
-> - Add color to the datapoints on your boxplot according to the plot from which
->   the sample was taken (`plot_id`).
+> - Add color to the datapoints on your boxplot according to the month from which
+>   the specimen was taken (`month`).
 
-> Hint: Check the class for `plot_id`. Consider changing the class of `plot_id` from integer to factor. Why does this change how R makes the graph?
+> Hint: Check the class for `month`. Consider changing the class of `month` from integer to factor. Why does this change how R makes the graph?
 
 ```{r boxplot-challenge, eval=FALSE, purl=TRUE, echo=FALSE}
 ## Challenge with boxplots:
@@ -278,9 +278,9 @@ ggplot(data = specimens_complete, aes(x = scientificName, y = weight)) +
 ##  3. Create boxplot for `length` overlaid on a jitter layer.
 
 ##  4. Add color to the datapoints on your boxplot according to the
-##  plot from which the sample was taken (`plot_id`).
-##  Hint: Check the class for `plot_id`. Consider changing the class
-##  of `plot_id` from integer to factor. Why does this change how R
+##  month from which the specimen was taken (`month`).
+##  Hint: Check the class for `month`. Consider changing the class
+##  of `month` from integer to factor. Why does this change how R
 ##  makes the graph?
 
 ```
@@ -443,9 +443,9 @@ and 'n' and add a title to the figure:
 ggplot(data = yearly_sex_counts, aes(x = year, y = n, color = sex)) +
     geom_line() +
     facet_wrap(~ scientificName) +
-    labs(title = 'Observed species in time',
-         x = 'Year of observation',
-         y = 'Number of species') +
+    labs(title = 'Specimens collected over in time',
+         x = 'Year of collection',
+         y = 'Number of specimens') +
     theme_bw()
 ```
 
@@ -456,9 +456,9 @@ increasing the font size:
 ggplot(data = yearly_sex_counts, aes(x = year, y = n, color = sex)) +
     geom_line() +
     facet_wrap(~ scientificName) +
-    labs(title = 'Observed species in time',
-        x = 'Year of observation',
-        y = 'Number of species') +
+    labs(title = 'Specimens collected over in time',
+         x = 'Year of collection',
+         y = 'Number of specimens') +
     theme_bw() +
     theme(text=element_text(size=16))
 ```
@@ -478,9 +478,9 @@ labels:
 ggplot(data = yearly_sex_counts, aes(x = year, y = n, color = sex)) +
     geom_line() +
     facet_wrap(~ scientificName) +
-    labs(title = 'Observed species in time',
-        x = 'Year of observation',
-        y = 'Number of species') +
+    labs(title = 'Specimens collected over in time',
+         x = 'Year of collection',
+         y = 'Number of specimens') +
     theme_bw() +
     theme(axis.text.x = element_text(colour="grey20", size=12, angle=90, hjust=.5, vjust=.5),
                         axis.text.y = element_text(colour="grey20", size=12),
@@ -543,9 +543,9 @@ Instead, use the `ggsave()` function, which allows you easily change the dimensi
 my_plot <- ggplot(data = yearly_sex_counts, aes(x = year, y = n, color = sex)) +
     geom_line() +
     facet_wrap(~ scientificName) +
-    labs(title = 'Observed species in time',
-        x = 'Year of observation',
-        y = 'Number of species') +
+    labs(title = 'Specimens collected over in time',
+         x = 'Year of collection',
+         y = 'Number of specimens') +
     theme_bw() +
     theme(axis.text.x = element_text(colour="grey20", size=12, angle=90, hjust=.5, vjust=.5),
                         axis.text.y = element_text(colour="grey20", size=12),
