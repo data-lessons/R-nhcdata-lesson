@@ -714,7 +714,7 @@ localities &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span 
 my_db &lt;-<span class="st"> </span><span class="kw">src_sqlite</span>(my_db_file, <span class="dt">create =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>Currently, our new database is empty, it doesn’t contain any tables:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db</code></pre></div>
-<pre><code>#&gt; src:  sqlite 3.19.3 [/home/mcollins/Git/R-nhcdata-lesson/my_rodent_database.sqlite]
+<pre><code>#&gt; src:  sqlite 3.19.3 [my_rodent_database.sqlite]
 #&gt; tbls:</code></pre>
 <p>To add tables, we copy the existing data.frames into the database one by one:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">copy_to</span>(my_db, specimens)
@@ -727,7 +727,7 @@ my_db</code></pre></div>
 </blockquote>
 <p><strong>Note:</strong> In this example, we first loaded all of the data into the R session by reading the three <code>csv</code> files. Because all the data has to flow through R, this is not suitable for very large datasets.</p>
 <p style="text-align: right; font-size: small;">
-Page build on: 2017-10-24 16:34:49
+Page build on: 2017-10-24 16:38:44
 </p>
 </div>
 
