@@ -47,9 +47,9 @@
 ## 2. Use the function `median()` to calculate the median of the `lengths` vector.
 
 
-### Presentation of the Carabidae beetle data
-## download.file("https://ndownloader.figshare.com/files/2292169",
-##               "data/portal_data_joined.csv")
+### Presentation of the iDigBio data
+## download.file("https://ndownloader.figshare.com/files/9582724",
+##               "data/idigbio_rodents.csv")
 
 ## Challenge
 ## Based on the output of `str(specimens)`, can you answer the following questions?

@@ -472,8 +472,8 @@ div.tocify {
 <p>We are going to use the R function <code>download.file()</code> to download the CSV file that contains the survey data from figshare, and we will use <code>read.csv()</code> to load into memory the content of the CSV file as an object of class <code>data.frame</code>.</p>
 <p>To download the data into the <code>data/</code> subdirectory, run the following:</p>
 <p>FIXME: Data path</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://ndownloader.figshare.com/files/2292169&quot;</span>,
-              <span class="st">&quot;data/portal_data_joined.csv&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://ndownloader.figshare.com/files/9582724&quot;</span>,
+              <span class="st">&quot;data/idigbio_rodents.csv&quot;</span>)</code></pre></div>
 <p>You are now ready to load the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">specimens &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/idigbio_rodents.csv&quot;</span>)</code></pre></div>
 <p>This statement doesn’t produce any output because, as you might recall, assignments don’t display anything. If we want to check that our data has been loaded, we can print the variable’s value: <code>specimens</code>.</p>
@@ -746,7 +746,7 @@ specimens$genus &lt;-<span class="st"> </span><span class="kw">factor</span>(spe
 
 <span class="kw">str</span>(specimens) <span class="co"># notice the new column, with &#39;date&#39; as the class</span></code></pre></div>
 <p style="text-align: right; font-size: small;">
-Page build on: 2017-10-24 16:37:56
+Page build on: 2017-10-25 10:23:55
 </p>
 </div>
 
@@ -755,7 +755,7 @@ Page build on: 2017-10-24 16:37:56
 <p><a href="http://datacarpentry.org/">Data Carpentry</a>,
   2017. <a href="LICENSE.html">License</a>. <a href="CONTRIBUTING.html">Contributing</a>. <br/>
   Questions?  Feedback?
-  Please <a href="https://github.com/datacarpentry/R-ecology-lesson/issues/new">file
+  Please <a href="https://github.com/data-lessons/R-nhcdata-lesson/issues/new">file
   an issue on GitHub</a>. <br/> On
   Twitter: <a href="https://twitter.com/datacarpentry">@datacarpentry</a></p>
 
