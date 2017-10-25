@@ -378,7 +378,7 @@ div.tocify {
 <p>We will continue to explore the <code>specimens</code> data you are already familiar with from previous lessons. First, we are going to install the <strong><code>dbplyr</code></strong> package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;dbplyr&quot;</span>)
 <span class="kw">library</span>(dbplyr)</code></pre></div>
-<p>The SQLite database is contained in a single file <code>portal_rodents.sqlite</code> that you generated during the SQL lesson. If you don’t have it, you can download it from Figshare into the <code>data</code> subdirectory using:</p>
+<p>The SQLite database is contained in a single file <code>idigbio_rodents.sqlite</code> that you generated during the SQL lesson. If you don’t have it, you can download it from Figshare into the <code>data</code> subdirectory using:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir.create</span>(<span class="st">&quot;data&quot;</span>, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>)
 <span class="kw">download.file</span>(<span class="dt">url =</span> <span class="st">&quot;https://ndownloader.figshare.com/files/9583582&quot;</span>,
               <span class="dt">destfile =</span> <span class="st">&quot;data/idigbio_rodents.sqlite&quot;</span>, <span class="dt">mode =</span> <span class="st">&quot;wb&quot;</span>)</code></pre></div>
@@ -397,7 +397,7 @@ div.tocify {
 #&gt; 
 #&gt;     intersect, setdiff, setequal, union</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rodents &lt;-<span class="st"> </span><span class="kw">src_sqlite</span>(<span class="st">&quot;data/idigbio_rodents.sqlite&quot;</span>)</code></pre></div>
-<p>The <code>src_sqlite()</code> command does not load the data into the R session (as the <code>read.csv()</code> function did). Instead, it merely instructs R to connect to the <code>SQLite</code> database contained in the <code>portal_rodents.sqlite</code> file.</p>
+<p>The <code>src_sqlite()</code> command does not load the data into the R session (as the <code>read.csv()</code> function did). Instead, it merely instructs R to connect to the <code>SQLite</code> database contained in the <code>idigbio_rodents.sqlite</code> file.</p>
 <p>(You can use the <code>src_mysql()</code>, <code>src_postgres()</code> and <code>src_bigquery()</code> to connect to the other database types supported by <strong><code>dplyr</code></strong>.)</p>
 <p>Let’s take a closer look at the <code>rodents</code> database we just connected to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rodents</code></pre></div>
@@ -727,7 +727,7 @@ my_db</code></pre></div>
 </blockquote>
 <p><strong>Note:</strong> In this example, we first loaded all of the data into the R session by reading the three <code>csv</code> files. Because all the data has to flow through R, this is not suitable for very large datasets.</p>
 <p style="text-align: right; font-size: small;">
-Page build on: 2017-10-25 10:24:43
+Page build on: 2017-10-25 10:37:05
 </p>
 </div>
 
