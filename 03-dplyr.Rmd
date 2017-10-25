@@ -5,7 +5,7 @@ author: Data Carpentry contributors
 
 ```{r, echo=FALSE, purl=FALSE, message = FALSE}
 source("setup.R")
-surveys <- read.csv("data/portal_data_joined.csv")
+specimens <- read.csv("data/idigbio_rodents.csv")
 ```
 
 ```{r, echo=FALSE, purl=TRUE}
@@ -79,16 +79,16 @@ To learn more about **`dplyr`** and **`tidyr`** after the workshop, you may want
 We're going to learn some of the most common **`dplyr`** functions: `select()`,
 `filter()`, `mutate()`, `group_by()`, and `summarize()`. To select columns of a
 data frame, use `select()`. The first argument to this function is the data
-frame (`surveys`), and the subsequent arguments are the columns to keep.
+frame (`specimens`), and the subsequent arguments are the columns to keep.
 
 ```{r, results = 'hide', purl = FALSE}
-select(surveys, plot_id, species_id, weight)
+select(specimens, institutionCode, genus, weight)
 ```
 
 To choose rows based on a specific criteria, use `filter()`:
 
 ```{r, purl = FALSE}
-filter(surveys, year == 1995)
+filter(specimens, year == 1995)
 ```
 
 ## Pipes
@@ -111,14 +111,14 @@ with **`dplyr`**. If you use RStudio, you can type the pipe with <kbd>Ctrl</kbd>
 <kbd>Shift</kbd> + <kbd>M</kbd> if you have a Mac.
 
 ```{r, purl = FALSE}
-surveys %>%
-  filter(weight < 5) %>%
-  select(species_id, sex, weight)
+specimens %>%
+  filter(weight < 50) %>%
+  select(genus, sex, weight)
 ```
 
-In the above, we use the pipe to send the `surveys` dataset first through
-`filter()` to keep rows where `weight` is less than 5, then through `select()`
-to keep only the `species_id`, `sex`, and `weight` columns. Since `%>%` takes
+In the above, we use the pipe to send the `specimens` dataset first through
+`filter()` to keep rows where `weight` is less than 50, then through `select()`
+to keep only the `scientificName`, `sex`, and `weight` columns. Since `%>%` takes
 the object on its left and passes it as the first argument to the function on
 its right, we don't need to explicitly include it as an argument to the
 `filter()` and `select()` functions anymore.
@@ -127,24 +127,24 @@ If we wanted to create a new object with this smaller version of the data, we
 could do so by assigning it a new name:
 
 ```{r, purl = FALSE}
-surveys_sml <- surveys %>%
-  filter(weight < 5) %>%
-  select(species_id, sex, weight)
+specimens_sml <- specimens %>%
+  filter(weight < 50) %>%
+  select(genus, sex, weight)
 
-surveys_sml
+specimens_sml
 ```
 
 Note that the final data frame is the leftmost part of this expression.
 
 > ### Challenge {.challenge}
 >
->  Using pipes, subset the `survey` data to include individuals collected before
+>  Using pipes, subset the `specimens` data to include individuals collected before
 >  1995 and retain only the columns `year`, `sex`, and `weight`.
 
 <!---
 ```{r, eval=FALSE, purl=FALSE}
 ## Answer
-surveys %>%
+specimens %>%
     filter(year < 1995) %>%
     select(year, sex, weight)
 ```
@@ -166,14 +166,14 @@ columns. For this we'll use `mutate()`.
 To create a new column of weight in kg:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   mutate(weight_kg = weight / 1000)
 ```
 
 You can also create a second new column based on the first new column within the same call of `mutate()`:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   mutate(weight_kg = weight / 1000,
          weight_kg2 = weight_kg * 2)
 ```
@@ -183,7 +183,7 @@ can use a pipe to view the `head()` of the data. (Pipes work with non-**`dplyr`*
 functions, too, as long as the **`dplyr`** or `magrittr` package is loaded).
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   mutate(weight_kg = weight / 1000) %>%
   head
 ```
@@ -192,11 +192,11 @@ Note that we don't include parentheses at the end of our call to `head()` above.
 When piping into a function with no additional arguments, you can call the
 function with or without parentheses (e.g. `head` or `head()`).
 
-The first few rows of the output are full of `NA`s, so if we wanted to remove
-those we could insert a `filter()` in the chain:
+Remember that some of our weights are `NA`s, if we wanted to remove those
+we could insert a `filter()` in the chain:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   filter(!is.na(weight)) %>%
   mutate(weight_kg = weight / 1000) %>%
   head
@@ -207,10 +207,10 @@ symbol negates the result, so we're asking for everything that *is not* an `NA`.
 
 > ### Challenge {.challenge}
 >
->  Create a new data frame from the `surveys` data that meets the following
->  criteria: contains only the `species_id` column and a new column called
->  `hindfoot_half` containing values that are half the `hindfoot_length` values.
->  In this `hindfoot_half` column, there are no `NA`s and all values are less
+>  Create a new data frame from the `specimens` data that meets the following
+>  criteria: contains only the `scientificName` column and a new column called
+>  `weight_half` containing values that are half the `weight` values.
+>  In this `weight_half` column, there are no `NA`s and all values are less
 >  than 30.
 >
 >  **Hint**: think about how the commands should be ordered to produce this data frame!
@@ -218,20 +218,20 @@ symbol negates the result, so we're asking for everything that *is not* an `NA`.
 <!---
 ```{r, eval=FALSE, purl=FALSE}
 ## Answer
-surveys_hindfoot_half <- surveys %>%
-    filter(!is.na(hindfoot_length)) %>%
-    mutate(hindfoot_half = hindfoot_length / 2) %>%
-    filter(hindfoot_half < 30) %>%
-    select(species_id, hindfoot_half)
+specimens_weight_half <- specimens %>%
+    filter(!is.na(weight)) %>%
+    mutate(weight_half = weight / 2) %>%
+    filter(weight_half < 30) %>%
+    select(scientificName, weight_half)
 ```
 --->
 
     ```{r, eval=FALSE, purl=TRUE, echo=FALSE}
     ## Mutate Challenge:
-    ##  Create a new data frame from the `surveys` data that meets the following
-    ##  criteria: contains only the `species_id` column and a column that
-    ##  contains values that are half the `hindfoot_length` values (e.g. a
-    ##  new column `hindfoot_half`). In this `hindfoot_half` column, there are
+    ##  Create a new data frame from the `specimens` data that meets the following
+    ##  criteria: contains only the `scientificName` column and a column that
+    ##  contains values that are half the `weight` values (e.g. a
+    ##  new column `weight_half`). In this `weight_half` column, there are
     ##  no NA values and all values are < 30.
 
     ##  Hint: think about how the commands should be ordered to produce this data frame!
@@ -254,7 +254,7 @@ the column names that contain the **categorical** variables for which you want
 to calculate the summary statistics. So to view the mean `weight` by sex:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   group_by(sex) %>%
   summarize(mean_weight = mean(weight, na.rm = TRUE))
 ```
@@ -271,37 +271,37 @@ factors.
 You can also group by multiple columns:
 
 ```{r, purl = FALSE}
-surveys %>%
-  group_by(sex, species_id) %>%
+specimens %>%
+  group_by(sex, genus) %>%
   summarize(mean_weight = mean(weight, na.rm = TRUE))
 ```
 
-When grouping both by `sex` and `species_id`, the first rows are for individuals
-that escaped before their sex could be determined and weighted. You may notice
-that the last column does not contain `NA` but `NaN` (which refers to "Not a
-Number"). To avoid this, we can remove the missing values for weight before we
+When grouping both by `sex` and `scientificName`, the first rows are for individuals
+that have not had a sex determined. 
+
+We can also remove the missing values for weight before we
 attempt to calculate the summary statistics on weight. Because the missing
 values are removed, we can omit `na.rm = TRUE` when computing the mean:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   filter(!is.na(weight)) %>%
-  group_by(sex, species_id) %>%
+  group_by(sex, genus) %>%
   summarize(mean_weight = mean(weight))
 ```
 
 Here, again, the output from these calls doesn't run off the screen
 anymore. Recall that **`dplyr`** has changed our object from`data.frame` to
-`tbl_df`. If you want to display more data, you can use the `print()` function
+`tibble`. If you want to display more data, you can use the `print()` function
 at the end of your chain with the argument `n` specifying the number of rows to
 display:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   filter(!is.na(weight)) %>%
-  group_by(sex, species_id) %>%
+  group_by(sex, genus) %>%
   summarize(mean_weight = mean(weight)) %>%
-  print(n = 15)
+  print(n = 7)
 ```
 
 Once the data are grouped, you can also summarize multiple variables at the same
@@ -309,9 +309,9 @@ time (and not necessarily on the same variable). For instance, we could add a
 column indicating the minimum weight for each species for each sex:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   filter(!is.na(weight)) %>%
-  group_by(sex, species_id) %>%
+  group_by(sex, genus) %>%
   summarize(mean_weight = mean(weight),
             min_weight = min(weight))
 ```
@@ -325,7 +325,7 @@ provides `tally()`. For example, if we wanted to group by sex and find the
 number of rows of data for each sex, we would do:
 
 ```{r, purl = FALSE}
-surveys %>%
+specimens %>%
   group_by(sex) %>%
   tally
 ```
@@ -335,13 +335,13 @@ counts the total number of records for each category.
 
 > ### Challenge {.challenge}
 >
-> 1. How many individuals were caught in each `plot_type` surveyed?
+> 1. How many individuals were caught in each `stateProvince` surveyed?
 >
-> 2. Use `group_by()` and `summarize()` to find the mean, min, and max hindfoot
-> length for each species (using `species_id`).
+> 2. Use `group_by()` and `summarize()` to find the mean, min, and max 
+> length for each species (using `scientificName`).
 >
 > 3. What was the heaviest animal measured in each year? Return the columns `year`,
-> `genus`, `species_id`, and `weight`.
+> `genus`, `scientificName`, and `weight`.
 >
 > 4. You saw above how to count the number of individuals of each `sex` using a
 > combination of `group_by()` and `tally()`. How could you get the same result
@@ -351,30 +351,30 @@ counts the total number of records for each category.
 <!---
 ```{r, echo=FALSE, purl=FALSE}
 ## Answer 1
-surveys %>%
-    group_by(plot_type) %>%
+specimens %>%
+    group_by(stateProvince) %>%
     tally
 
 ## Answer 2
-surveys %>%
-    filter(!is.na(hindfoot_length)) %>%
-    group_by(species_id) %>%
+specimens %>%
+    filter(!is.na(length)) %>%
+    group_by(scientificName) %>%
     summarize(
-        mean_hindfoot_length = mean(hindfoot_length),
-        min_hindfoot_length = min(hindfoot_length),
-        max_hindfoot_length = max(hindfoot_length)
+        mean_length = mean(length),
+        min_length = min(length),
+        max_length = max(length)
     )
 
 ## Answer 3
-surveys %>%
+specimens %>%
     filter(!is.na(weight)) %>%
     group_by(year) %>%
     filter(weight == max(weight)) %>%
-    select(year, genus, species, weight) %>%
+    select(year, genus, scientificName, weight) %>%
     arrange(year)
 
 ## Answer 4
-surveys %>%
+specimens %>%
   group_by(sex) %>%
   summarize(n = n())
 ```
@@ -382,13 +382,13 @@ surveys %>%
 
 ```{r, eval=FALSE, purl=TRUE, echo=FALSE}
 ## Tally Challenges:
-##  1. How many individuals were caught in each `plot_type` surveyed?
+##  1. How many individuals were caught in each `stateProvince` surveyed?
 
 ##  2. Use `group_by()` and `summarize()` to find the mean, min, and
-##  max hindfoot length for each species (using `species_id`).
+##  max length for each species (using `scientificName`).
 
 ##  3. What was the heaviest animal measured in each year? Return the
-##  columns `year`, `genus`, `species_id`, and `weight`.
+##  columns `year`, `genus`, `scientificName`, and `weight`.
 
 ## 4. You saw above how to count the number of individuals of each `sex` using a
 ## combination of `group_by()` and `tally()`. How could you get the same result
@@ -410,21 +410,21 @@ entire data set?
 
 To answer that question, we'd want each plot to have a single row, with all of
 the measurements in a single plot having their own column. This is called a
-**wide** data format. For the `surveys` data as we have it right now, this is
+**wide** data format. For the `specimens` data as we have it right now, this is
 going to be one heck of a wide data frame! However, if we were to summarize data
-within plots and species, we might begin to have some relationships we'd want to
+within states and genus, we might begin to have some relationships we'd want to
 examine.
 
 Let's see this in action. First, using **`dplyr`**, let's create a data frame
-with the mean body weight of each genera by plot.
+with the mean body weight of each genera by state.
 
 ```{r, purl=FALSE}
-surveys_gw <- surveys %>%
+specimens_gw <- specimens %>%
     filter(!is.na(weight)) %>%
-    group_by(genus, plot_id) %>%
+    group_by(genus, stateProvince) %>%
     summarize(mean_weight = mean(weight))
 
-head(surveys_gw)
+head(specimens_gw)
 ```
 
 #### Long to Wide with `spread`
@@ -435,30 +435,21 @@ different taxa into columns. `spread` takes three arguments - the data, the
 one with the numbers. We'll use a pipe so we can ignore the data argument.
 
 ```{r, purl=FALSE}
-surveys_gw_wide <- surveys_gw %>%
+specimens_gw_wide <- specimens_gw %>%
   spread(genus, mean_weight)
 
-head(surveys_gw_wide)
+head(specimens_gw_wide)
 ```
 
 Notice that some genera have `NA` values. That's because some of those genera
-don't have any record in that plot. Sometimes it is fine to leave those as
+don't have any record in that state. Sometimes it is fine to leave those as
 `NA`. Sometimes we want to fill them as zeros, in which case we would add the
 argument `fill=0`.
 
 ```{r, purl=FALSE}
-surveys_gw %>%
+specimens_gw %>%
   spread(genus, mean_weight, fill = 0) %>%
   head
-```
-
-We can now do things like plot the weight of *Baiomys* against *Chaetodipus* or
-examine their correlation.
-
-```{r, purl=FALSE}
-surveys_gw %>%
-  spread(genus, mean_weight, fill = 0) %>%
-  cor(use = "pairwise.complete")
 ```
 
 #### Wide to long with `gather`
@@ -467,14 +458,14 @@ What if we had the opposite problem, and wanted to go from a wide to long
 format? For that, we use `gather` to sweep up a set of columns into one
 key-value pair. We give it the arguments of a new key and value column name, and
 then we specify which columns we either want or do not want gathered up. So, to
-go backwards from `surveys_gw_wide`, and exclude `plot_id` from the gathering,
+go backwards from `specimens_gw_wide`, and exclude `stateProvince` from the gathering,
 we would do the following:
 
 ```{r, purl=FALSE}
-surveys_gw_long <- surveys_gw_wide %>%
-  gather(genus, mean_weight, -plot_id)
+specimens_gw_long <- specimens_gw_wide %>%
+  gather(genus, mean_weight, -stateProvince)
 
-head(surveys_gw_long)
+head(specimens_gw_long)
 ```
 
 Note that now the `NA` genera are included in the long format. Going from wide
@@ -487,54 +478,54 @@ specify what to gather than what to leave alone. And if the columns are in a
 row, we don't even need to list them all out - just use the `:` operator!
 
 ```{r, purl=FALSE}
-surveys_gw_wide %>%
-  gather(genus, mean_weight, Baiomys:Spermophilus) %>%
+specimens_gw_wide %>%
+  gather(genus, mean_weight, dipodomys:thomomys) %>%
   head
 ```
 
 > ### Challenge {.challenge}
 >
-> 1. Make a wide data frame with `year` as columns, `plot_id` as rows, and the
->   values are the number of genera per plot. You will need to summarize before
+> 1. Make a wide data frame with `year` as columns, `stateProvince` as rows, and the
+>   values are the number of genera per state. You will need to summarize before
 >   reshaping, and use the function `n_distinct` to get the number of unique
 >   types of a genera. It's a powerful function! See `?n_distinct` for more.
 >
 > 2. Now take that data frame, and make it long again, so each row is a unique
->    `plot_id` `year` combination.
+>    `stateProvince` `year` combination.
 >
-> 3. The `surveys` data set is not truly wide or long because there are
->    two columns of measurement - `hindfoot_length` and `weight`.  This makes it
+> 3. The `specimens` data set is not truly wide or long because there are
+>    two columns of measurement - `length` and `weight`.  This makes it
 >    difficult to do things like look at the relationship between mean values of
 >    each measurement per year in different plot types. Let's walk through a
 >    common solution for this type of problem. First, use `gather` to create a
 >    truly long dataset where we have a key column called `measurement` and a
->    `value` column that takes on the value of either `hindfoot_length` or
+>    `value` column that takes on the value of either `length` or
 >    `weight`. Hint: You'll need to specify which columns are being gathered.
 >
 > 4. With this new truly long data set, calculate the average of each
->    `measurement` in each `year` for each different `plot_type`. Then
->    `spread` them into a wide data set with a column for `hindfoot_length` and
+>    `measurement` in each `year` for each different `stateProvince`. Then
+>    `spread` them into a wide data set with a column for `length` and
 >    `weight`. Hint: Remember, you only need to specify the key and value
 >    columns for `spread`.
 
 ```{r, eval=FALSE, purl=TRUE, echo=FALSE}
 ## Reshaping challenges
 
-## 1. Make a wide data frame with `year` as columns, `plot_id`` as rows, and the values are the number of genera per plot. You will need to summarize before reshaping, and use the function `n_distinct` to get the number of unique types of a genera. It's a powerful function! See `?n_distinct` for more.
+## 1. Make a wide data frame with `year` as columns, `stateProvince`` as rows, and the values are the number of genera per state. You will need to summarize before reshaping, and use the function `n_distinct` to get the number of unique types of a genera. It's a powerful function! See `?n_distinct` for more.
 
-## 2. Now take that data frame, and make it long again, so each row is a unique `plot_id` `year` combination
+## 2. Now take that data frame, and make it long again, so each row is a unique `stateProvince` `year` combination
 
-## 3. The `surveys` data set is not truly wide or long because there are two columns of measurement - `hindfoot_length` and `weight`.  This makes it difficult to do things like look at the relationship between mean values of each measurement per year in different plot types. Let's walk through a common solution for this type of problem. First, use `gather` to create a truly long dataset where we have a key column called `measurement` and a `value` column that takes on the value of either `hindfoot_length` or `weight`. Hint: You'll need to specify which columns are being gathered.
+## 3. The `specimens` data set is not truly wide or long because there are two columns of measurement - `length` and `weight`.  This makes it difficult to do things like look at the relationship between mean values of each measurement per year in different plot types. Let's walk through a common solution for this type of problem. First, use `gather` to create a truly long dataset where we have a key column called `measurement` and a `value` column that takes on the value of either `length` or `weight`. Hint: You'll need to specify which columns are being gathered.
 
-## 4. With this new truly long data set, calculate the average of each `measurement` in each `year` for each different `plot_type`. Then `spread` them into a wide data set with a column for `hindfoot_length` and `weight`. Hint: Remember, you only need to specify the key and value columns for `spread`.
+## 4. With this new truly long data set, calculate the average of each `measurement` in each `year` for each different `stateProvince`. Then `spread` them into a wide data set with a column for `length` and `weight`. Hint: Remember, you only need to specify the key and value columns for `spread`.
 
 ```
 
 <!---
   ```{r, echo=FALSE, purl=FALSE}
 ## Answer 1
-rich_time <- surveys %>%
-  group_by(plot_id, year) %>%
+rich_time <- specimens %>%
+  group_by(stateProvince, year) %>%
   summarize(n_genera = n_distinct(genus)) %>%
   spread(year, n_genera)
 
@@ -542,15 +533,15 @@ head(rich_time)
 
 ## Answer 2
 rich_time %>%
-  gather(year, n_genera, -plot_id)
+  gather(year, n_genera, -stateProvince)
 
 ## Answer 3
-surveys_long <- surveys %>%
-  gather(measurement, value, hindfoot_length, weight)
+specimens_long <- specimens %>%
+  gather(measurement, value, length, weight)
 
 ## Answer 4
-surveys_long %>%
-  group_by(year, measurement, plot_type) %>%
+specimens_long %>%
+  group_by(year, measurement, stateProvince) %>%
   summarize(mean_value = mean(value, na.rm=TRUE)) %>%
   spread(measurement, mean_value)
 ```
@@ -577,18 +568,18 @@ re-generate them.
 In preparation for our next lesson on plotting, we are going to prepare a
 cleaned up version of the dataset that doesn't include any missing data.
 
-Let's start by removing observations for which the `species_id` is missing. In
+Let's start by removing observations for which the `scientificName` is missing. In
 this dataset, the missing species are represented by an empty string and not an
 `NA`. Let's also remove observations for which `weight` and the
-`hindfoot_length` are missing. This dataset should also only contain
+`length` are missing. This dataset should also only contain
 observations of animals for which the sex has been determined:
 
 
 ```{r, purl=FALSE}
-surveys_complete <- surveys %>%
-  filter(species_id != "",         # remove missing species_id
+specimens_complete <- specimens %>%
+  filter(scientificName != "",         # remove missing scientificName
          !is.na(weight),           # remove missing weight
-         !is.na(hindfoot_length),  # remove missing hindfoot_length
+         !is.na(length),  # remove missing length
          sex != "")                # remove missing sex
 ```
 
@@ -600,58 +591,57 @@ observed, and filter out the rare species; then, we will extract only the
 observations for these more common species:
 
 ```{r, purl=FALSE}
-## Extract the most common species_id
-species_counts <- surveys_complete %>%
-  group_by(species_id) %>%
+## Extract the most common scientificName
+species_counts <- specimens_complete %>%
+  group_by(scientificName) %>%
   tally %>%
   filter(n >= 50)
 
 ## Only keep the most common species
-surveys_complete <- surveys_complete %>%
-  filter(species_id %in% species_counts$species_id)
+specimens_complete <- specimens_complete %>%
+  filter(scientificName %in% species_counts$scientificName)
 ```
 
     ```{r, eval=FALSE, purl=TRUE, echo=FALSE}
     ### Create the dataset for exporting:
-    ##  Start by removing observations for which the `species_id`, `weight`,
-    ##  `hindfoot_length`, or `sex` data are missing:
-    surveys_complete <- surveys %>%
-      filter(species_id != "",        # remove missing species_id
+    ##  Start by removing observations for which the `scientificName`, `weight`,
+    ##  `length`, or `sex` data are missing:
+    specimens_complete <- specimens %>%
+      filter(scientificName != "",        # remove missing scientificName
       !is.na(weight),                 # remove missing weight
-		  !is.na(hindfoot_length),        # remove missing hindfoot_length
+		  !is.na(length),        # remove missing length
 		  sex != "")                      # remove missing sex
 
     ##  Now remove rare species in two steps. First, make a list of species which
     ##  appear at least 50 times in our dataset:
-    species_counts <- surveys_complete %>%
-                  group_by(species_id) %>%
+    species_counts <- specimens_complete %>%
+                  group_by(scientificName) %>%
                   tally %>%
 				          filter(n >= 50) %>%
-				          select(species_id)
+				          select(scientificName)
 
     ##  Second, keep only those species:
-    surveys_complete <- surveys_complete %>%
-                 filter(species_id %in% species_counts$species_id)
+    specimens_complete <- specimens_complete %>%
+                 filter(scientificName %in% species_counts$scientificName)
 
     ```
 
 To make sure that everyone has the same dataset, check that
-`surveys_complete` has `r nrow(surveys_complete)` rows and `r ncol(surveys_complete)`
-columns by typing `dim(surveys_complete)`.
-
+`specimens_complete` has `r nrow(specimens_complete)` rows and `r ncol(specimens_complete)`
+columns by typing `dim(specimens_complete)`.
 Now that our dataset is ready, we can save it as a CSV file in our `data_output`
 folder. By default, `write.csv()` includes a column with row names (in our case
 the names are just the row numbers), so we need to add `row.names = FALSE` so
 they are not included:
 
 ```{r, purl=FALSE, eval=FALSE}
-write.csv(surveys_complete, file = "data_output/surveys_complete.csv",
+write.csv(specimens_complete, file = "data_output/specimens_complete.csv",
           row.names = FALSE)
 ```
 
 ```{r, purl=FALSE, eval=TRUE, echo=FALSE}
 if (!file.exists("data_output")) dir.create("data_output")
-write.csv(surveys_complete, file = "data_output/surveys_complete.csv")
+write.csv(specimens_complete, file = "data_output/specimens_complete.csv")
 ```
 
 <p style="text-align: right; font-size: small;">Page build on: `r format(Sys.time())`</p>
