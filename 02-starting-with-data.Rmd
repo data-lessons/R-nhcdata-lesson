@@ -24,7 +24,7 @@ source("setup.R")
 ## Presentation of the iDigBio data
 
 ```{r, echo=FALSE, purl=TRUE}
-### Presentation of the Carabidae beetle data
+### Presentation of the iDigBio data
 ```
 
 We are working with data about specimens from 4 genera in the order rodentia. 
@@ -76,8 +76,8 @@ To download the data into the `data/` subdirectory, run the following:
 FIXME: Data path
 
 ```{r, eval=FALSE, purl=TRUE}
-download.file("https://ndownloader.figshare.com/files/2292169",
-              "data/portal_data_joined.csv")
+download.file("https://ndownloader.figshare.com/files/9582724",
+              "data/idigbio_rodents.csv")
 ```
 
 You are now ready to load the data:
