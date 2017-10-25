@@ -5,7 +5,7 @@ author: Data Carpentry contributors
 
 ```{r source, include=FALSE, purl=FALSE}
 source("setup.R")
-if (file.exists("idigbio_rodents.sqlite")) file.remove("idigbio_rodents.sqlite")
+if (file.exists("my_rodent_database.sqlite")) file.remove("my_rodent_database.sqlite")
 ```
 
 ```{r, purl=TRUE, echo=FALSE}
