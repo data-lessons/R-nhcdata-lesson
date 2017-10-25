@@ -63,7 +63,7 @@ install.packages("dbplyr")
 library(dbplyr)
 ```
 
-The SQLite database is contained in a single file `portal_rodents.sqlite`
+The SQLite database is contained in a single file `idigbio_rodents.sqlite`
 that you generated during the SQL lesson. If you don't have it, you can download
 it from Figshare into the `data` subdirectory using:
 
@@ -84,7 +84,7 @@ rodents <- src_sqlite("data/idigbio_rodents.sqlite")
 
 The `src_sqlite()` command does not load the data into the R session (as the
 `read.csv()` function did). Instead, it merely instructs R to connect to
-the `SQLite` database contained in the `portal_rodents.sqlite` file.
+the `SQLite` database contained in the `idigbio_rodents.sqlite` file.
 
 (You can use the `src_mysql()`, `src_postgres()` and `src_bigquery()` to connect
 to the other database types supported by **`dplyr`**.)
